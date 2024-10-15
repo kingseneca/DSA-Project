@@ -1,18 +1,16 @@
-// Phonebook.java
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.Stack;
 import java.util.Scanner;
 
 class Phonebook {
     private ArrayList<Contact> contacts;
-    private ArrayList<Contact> deletedContacts;
-    private ArrayList<Contact> blockedContacts;
+    private Stack<Contact> deletedContacts;
+    private Stack<Contact> blockedContacts;
 
     public Phonebook() {
         contacts = new ArrayList<>();
-        deletedContacts = new ArrayList<>();
-        blockedContacts = new ArrayList<>();
+        deletedContacts = new Stack<>();
+        blockedContacts = new Stack<>();
     }
 
     public void insertContact(Contact contact) {
@@ -93,7 +91,7 @@ class Phonebook {
             String confirmation = scanner.nextLine();
             if (confirmation.equalsIgnoreCase("yes")) {
                 Contact contact = contacts.remove(index);
-                deletedContacts.add(contact); // Add to deleted contacts list
+                deletedContacts.push(contact); // Add to deleted contacts stack
                 System.out.println("Contact '" + name + "' has been deleted.");
             } else {
                 System.out.println("Deletion canceled.");
@@ -109,7 +107,7 @@ class Phonebook {
             Contact contact = contacts.get(index);
             if (!contact.isBlocked()) {
                 contact.setBlocked(true);
-                blockedContacts.add(contact);
+                blockedContacts.push(contact);
                 System.out.println("Contact '" + name + "' has been blocked.");
             } else {
                 System.out.println("Contact is already blocked.");
@@ -150,6 +148,7 @@ class Phonebook {
         }
     }
 
+    // QuickSort implementation for sorting contacts
     public void sortContacts() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Choose sorting criteria:");
@@ -157,29 +156,65 @@ class Phonebook {
         System.out.println("2. Sort by ID");
         System.out.print("Enter choice: ");
         int criteriaChoice = Integer.parseInt(scanner.nextLine());
-        System.out.println("Choose sort order:");
-        System.out.println("1. Ascending");
-        System.out.println("2. Descending");
-        System.out.print("Enter choice: ");
-        int orderChoice = Integer.parseInt(scanner.nextLine());
 
-        Comparator<Contact> comparator;
         if (criteriaChoice == 1) {
-            comparator = Comparator.comparing(Contact::getName);
+            quickSortByName(0, contacts.size() - 1);
         } else if (criteriaChoice == 2) {
-            comparator = Comparator.comparingLong(Contact::getID);
+            quickSortByID(0, contacts.size() - 1);
         } else {
             System.out.println("Invalid criteria choice.");
             return;
         }
-        if (orderChoice == 2) {
-            comparator = comparator.reversed();
-        } else if (orderChoice != 1) {
-            System.out.println("Invalid order choice.");
-            return;
-        }
-        Collections.sort(contacts, comparator);
+
         System.out.println("Contacts have been sorted.");
+    }
+
+    private void quickSortByName(int low, int high) {
+        if (low < high) {
+            int pivotIndex = partitionByName(low, high);
+            quickSortByName(low, pivotIndex - 1);
+            quickSortByName(pivotIndex + 1, high);
+        }
+    }
+
+    private int partitionByName(int low, int high) {
+        Contact pivot = contacts.get(high);
+        int i = low - 1;
+        for (int j = low; j < high; j++) {
+            if (contacts.get(j).getName().compareTo(pivot.getName()) <= 0) {
+                i++;
+                swap(i, j);
+            }
+        }
+        swap(i + 1, high);
+        return i + 1;
+    }
+
+    private void quickSortByID(int low, int high) {
+        if (low < high) {
+            int pivotIndex = partitionByID(low, high);
+            quickSortByID(low, pivotIndex - 1);
+            quickSortByID(pivotIndex + 1, high);
+        }
+    }
+
+    private int partitionByID(int low, int high) {
+        Contact pivot = contacts.get(high);
+        int i = low - 1;
+        for (int j = low; j < high; j++) {
+            if (contacts.get(j).getID() <= pivot.getID()) {
+                i++;
+                swap(i, j);
+            }
+        }
+        swap(i + 1, high);
+        return i + 1;
+    }
+
+    private void swap(int i, int j) {
+        Contact temp = contacts.get(i);
+        contacts.set(i, contacts.get(j));
+        contacts.set(j, temp);
     }
 
     public void analyzeSearchEfficiency() {
@@ -187,14 +222,14 @@ class Phonebook {
     }
 
     public boolean isValidPhoneNumber(String phoneNumber) {
-        return phoneNumber.matches("^(081|085)[0-9]{7}$"); // Regex for phone number validation
+        return phoneNumber.matches("^(081|085)[0-9]{7}$");
     }
 
     public boolean isValidID(String id) {
-        return id.matches("^[0-9]{1,20}$"); // Regex to ensure ID is 1 to 20 digits long
+        return id.matches("^[0-9]{1,20}$");
     }
 
-    public boolean isValidEmail(String email) { // Basic email validation regex
+    public boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9._%+-]+@gmail\\.[a-zA-Z]{2,}$";
         return email.matches(emailRegex);
     }
