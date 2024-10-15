@@ -86,48 +86,28 @@ The Phonebook module handles all operations related to managing contacts. Key fu
 * **Dynamic Resizing**: As users add or delete contacts, the list grows or shrinks automatically.  
 * **Indexed Access**: Contacts can be accessed, updated, or deleted using an index, making operations like searching through the list efficient.
 
-#### **Fundamentals:**
 
-* **Resizing Mechanism**: When the array backing the `ArrayList` fills up, it automatically increases its capacity (usually doubling in size), ensuring that insertion operations remain efficient.  
-* **Time Complexity**:  
-  * **Search**: O(n) – since each contact needs to be checked one by one unless sorted.  
-  * **Add (at end)**: O(1) amortized – adding a contact to the end of the list is constant time unless resizing is needed.  
-  * **Remove**: O(n) – removing a contact requires shifting the remaining contacts to fill the gap.
-
-### **2\. HashMap (Java's `HashMap` class)**
-
-* **Purpose**: Used to map phone numbers or contact names to `Contact` objects for quick lookups.  
-* **Reason for Use**: To allow constant time retrieval of contact information by phone number or name, avoiding the need to search through the entire list of contacts.
+### **2\. Stack**
+ Stack is a linear data structure that follows the Last In, First Out (LIFO) principle. This means the last element added to the stack will be the first one to be removed.
 
 #### **Importance:**
+ Stack is used for managing deleted contacts and blocked contacts. Since recently deleted or blocked contacts are more likely to be referenced or recovered, the LIFO nature of the stack ensures the most recent contact is accessed first.
+The stack operations are fast and straightforward, making it ideal for managing temporary data like deleted or blocked contacts.
+Advantages:
 
-* **Fast Lookup**: Using the hash code of the phone number or name, we can access contact details in constant time O(1), which is crucial for performance in large datasets.  
-* **Efficient Storage**: Keys (phone numbers/names) are unique, ensuring no duplicate entries and fast conflict resolution using hashing.
+Fast insertion and removal: both are O(1) operations, making it efficient to work with the most recent contacts.
+Ensures that the most recent data (deleted or blocked contacts) is handled first, which aligns with typical use cases of recovery or unblocking.
 
-#### **Fundamentals:**
-
-* **Hashing**: A hash function is used to convert the phone number (or name) into a unique hash code. This hash code determines where the `Contact` object is stored in the underlying array.  
-* **Time Complexity**:  
-  * **Search**: O(1) – on average, retrieving contact information is constant time.  
-  * **Insert/Update**: O(1) – adding or updating a contact is done in constant time.  
-  * **Remove**: O(1) – removing a contact is also a constant-time operation.
-
-### **3\. TreeMap (Java's `TreeMap` class)**
-
-* **Purpose**: Used to maintain sorted contact names or phone numbers for fast range queries and sorted traversals.  
-* **Reason for Use**: Provides an easy way to view contacts in a sorted manner (alphabetically by name or numerically by phone number) while still offering efficient search capabilities.
+### **2\. QuickSort**
+ 
+QuickSort is a highly efficient sorting algorithm used for rearranging elements in an array or list. It operates on the divide-and-conquer principle, which divides a large problem into smaller sub-problems and recursively solves them.
 
 #### **Importance:**
+ QuickSort, with an average time complexity of O(n log n), is faster than simpler sorting algorithms like Selection Sort or Bubble Sort, which have O(n²) time complexity. QuickSort is especially effective for large datasets.
 
-* **Sorted Data**: Useful for displaying contacts in alphabetical or numerical order without needing to sort the list manually.  
-* **Efficient Range Queries**: Allows searching within a specific range of names or numbers (e.g., contacts between 'A' and 'M') efficiently.
+In-Place Sorting: QuickSort operates in-place, meaning it does not require additional memory or storage space, making it efficient in terms of memory usage.
 
-#### **Fundamentals:**
-
-* **Balanced Binary Search Tree**: The `TreeMap` is implemented as a Red-Black Tree, a type of self-balancing binary search tree. This ensures that operations such as insertions, deletions, and lookups remain efficient.  
-* **Time Complexity**:  
-  * **Search**: O(log n) – as the data is structured as a tree, searching for a contact by name or phone number is logarithmic.  
-  * **Insert/Delete**: O(log n) – similarly, adding or removing contacts follows logarithmic time complexity due to the balanced tree structure.
+Versatility: QuickSort can handle various types of data, such as integers, floating-point numbers, and even strings, making it suitable for this application's task of sorting contacts by Name or ID.
 
 
 ## **contributers to the project**
